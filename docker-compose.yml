@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/apps/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_USER=ignacior
+      - MYSQL_DATABASE=grupo_01_enfermedades
+    networks:
+      - sistema_exp_enf_net
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_web
+    depends_on:
+      - mysql
+    volumes:
+      - ./web/:/var/www/html/
+    ports:
+      - "8000:80"
+    stdin_open: true
+    tty: true
+    networks:
+      - sistema_exp_enf_net
+networks:
+  sistema_exp_enf_net:
+    name: sistema_exp_enf_net
